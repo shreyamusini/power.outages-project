@@ -1,1 +1,6 @@
-data analysis for power outages project.
+Data Analysis for Power Outages Project.
+REPORT
+We chose the power outages dataset because we thought it gives us real time exposure to different types of data analysis like time series, handling different Null values and wrongly represented data. We thought this analyis was important because we did find very interesting differneces amongst various climate regions at different times of the year which we further analyzed. We mostly focused mostly on weather and climate regions on power outages especially customers affected by the power outages. Our Dataset has 1534 columns and 55 columns where each row resembled each power outage. The columns we used up the most were CUSTOMERS.AFFECTED, CLIMATE.REGION, ANOMALY.LEVEL, MONTH, YEAR, CAUSE.CATEGORY, CAUSE.CATERGORY.DETAIL, TOTAL.CUSTOMERS and some more columns. We thought columns measuring customers affected was a good metric to quantify the effect each power outage and has and how it varies with across other featues in the dataset. 
+
+DATA CLEANING AND EXPLORATORY DATA ANALYSIS
+We did a bunch of cleaning for the outage statr data, outage start time, outage restoration data and time columns so we have all fo that in 1 column for both start and restoration. We also filled in for the climate region which were nans using the postal code column. We also imputated a lot for customers affected by looking at the average customers affected within that state, climate, month etc.
