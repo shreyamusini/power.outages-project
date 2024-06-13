@@ -111,7 +111,7 @@ We investigate the missingness of anomaly level values and climate region and we
 We investigated the missingness of the values of CAUSE.CATEGORY and CAUSE.CATEGORY.DETAIL because when we examined the missingness of the details, we saw that more values were missing when the cause of the power outage was severe weather. The graph below shows the distribution of the cause being severe weather and the counts of the detail being missing or not missing. 
 
 <iframe
-  src="assets/fig10.html"
+  src="assets/fig9.html"
   width="800"
   height="600"
   frameborder="0"
@@ -120,13 +120,29 @@ We investigated the missingness of the values of CAUSE.CATEGORY and CAUSE.CATEGO
 We performed a permutation test to examine the missingness of cause category and cause category detail. The graph below shows the distribution of the TVDs calculated from our permutation test for determining the missingness of the cause of the power outage vs the details of the cause of the power outage (Cause Category vs Cause Category Detail). From the graph and our permutation test, we received a p-value of 0.0, meaning that the missingness of cause category detail is very dependent on cause category. 
 
 <iframe
-  src="assets/fig26.html"
+  src="assets/fig10.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
 
 We performed a permutation test to examine the missingness of ANOMALY.LEVEL and CLIMATE.REGION. The graph below shows the distribution of the TVDs calculated from our permutation test for determining the missingness of the anomaly level of that respecttive power outage vs the climate region in which the outage occured (ANOMALY.LEVEL vs CLIMATE.REGION). From the graph and our permutation test, we received a p-value of 0.632, meaning that the missingness of climate region is not very dependent on anomaly level.
+
+<iframe
+  src="assets/fig20.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+
+<iframe
+  src="assets/fig30.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
 
 ## HYPOTHESIS TESTING
 1. Null Hypothesis: The same amount of customers were affected by power outages in normal and warm climate coniditons
