@@ -1,10 +1,17 @@
 # Data Analysis for Power Outages
 
 
-
 ## REPORT
-We chose the power outages dataset because we thought it gives us real time exposure to different types of data analysis like time series, handling different Null values and wrongly represented data. We thought this analyis was important because we did find very interesting differneces amongst various climate regions at different times of the year which we further analyzed. We mostly focused mostly on weather and climate regions on power outages especially customers affected by the power outages. Our Dataset has 1534 columns and 55 columns where each row resembled each power outage. The columns we used up the most were CUSTOMERS.AFFECTED, CLIMATE.REGION, ANOMALY.LEVEL, MONTH, YEAR, CAUSE.CATEGORY, CAUSE.CATERGORY.DETAIL, TOTAL.CUSTOMERS and some more columns. We thought columns measuring customers affected was a good metric to quantify the effect each power outage and has and how it varies with across other featues in the dataset. 
-
+Power Outages dataset because we thought it provides a comprehensive view of various aspects of power outages, allowing for detailed data analysis including time series analysis, handling missing values, and correcting data inconsistencies. We thought this analyis was important because we did find very interesting differences amongst various climate regions at different times of the year which can have significant implications for infrastructure planning and disaster preparedness. We focused mostly on weather and climate regions on power outages especially customers impacted by these power outages. Power outages are a common and often disruptive event that can have significant economic and social impacts. By analyzing how weather conditions and climate regions affect power outages, we can provide valuable insights that help in planning and resource allocation to reduce the adverse effects on customers. Our Dataset has 1534 columns and 55 columns where each row resembled each power outage. 
+### Relevant Columns:
+CUSTOMERS.AFFECTED: The number of customers impacted by each power outage. This is a key metric for quantifying the impact of power outages.
+CLIMATE.REGION: The climate region where the outage occurred. Different regions may have varying levels of exposure to weather conditions that affect power outages.
+ANOMALY.LEVEL: The level of anomaly in weather conditions, indicating unusual weather patterns that might contribute to power outages.
+MONTH: The month in which the outage occurred. This helps in analyzing seasonal patterns in power outages.
+YEAR: The year in which the outage occurred, useful for identifying trends over time.
+CAUSE.CATEGORY: The general category of the cause of the outage, such as weather, equipment failure, or human error.
+CAUSE.CATEGORY.DETAIL: More specific details about the cause of the outage within the general category.
+TOTAL.CUSTOMERS: The total number of customers served by the utility company in the affected area. This helps in understanding the scale of the outage in relation to the customer base.
 
 
 ## DATA CLEANING AND EXPLORATORY DATA ANALYSIS
@@ -21,7 +28,6 @@ There were a total of 4 NANs in the CLIMATE.REGION column for the states Hawaii 
 We filled the null values in ANOMALY.LEVEL using probabilistic imputation conditioned on the MONTH and YEAR columns of our dataframe. There were still 9 null values in the dataframe because the anomaly levels of those month and year were filled with NaN. Since the anomaly levels were values from known values of the oceanic El Niño/La Niña index referring to the cold and warm episodes by season that were also averaged over periods of 3 months, we took the values that attributed to the month and year the remaining null values and probabilistically imputed the anomaly levels manually. 
 
 After this imputation, we realized the CLIMATE.CATEGORY column had 9 NaN values. Since the oceanic index table also color coded the values for each group of 3 months as warm, cold, or normal (which are the values used in CLIMATE.CATEGORY which is pulled from the same table as anomaly values) we manually filled in the climate categories using month and year to get the category. The last data cleaning step we performed was removing Alaska's power outage from the dataframe because there was only 1 reported outage where most of the values were NaN and nothing to reference to perform imputations. 
-
 
 ### HEAD OF CLEANED DATAFRAME
 
@@ -93,7 +99,7 @@ We thought it was imporant to make this pivot table because by analyzing the ave
 ## ASSESMENT OF MISSINGNESS
 We do think the column CUSTOMERS AFFECTED is NMAR because we did some analysis and found out that customers affected was most missing for cause category of intentional attack and we thought that could be so, 
 
-
+We investigate the missingness of anomaly level values and climate region and we achieved a p-value of 
 
 
 
@@ -115,7 +121,7 @@ We performed a permutation test to examine the missingness of cause category and
   frameborder="0"
 ></iframe>
 
-
+We performed a permutation test to examine the missingness of ANOMALY.LEVEL and CLIMATE.REGION. The graph below shows the distribution of the TVDs calculated from our permutation test for determining the missingness of the anomaly level of that respecttive power outage vs the climate region in which the outage occured (ANOMALY.LEVEL vs CLIMATE.REGION). From the graph and our permutation test, we received a p-value of 0.0, meaning that the missingness of climate region is not very dependent on anomaly level.
 
 ## HYPOTHESIS TESTING
 1. Null Hypothesis: The same amount of customers were affected by power outages in normal and warm climate coniditons
@@ -126,13 +132,13 @@ We performed a permutation test to examine the missingness of cause category and
 The test statistic chosen is the difference in mean number of customers affected between regions with a warm climate and those with a normal climate. This is a suitable choice because we are interested in comparing the means of two groups to determine if there is a significant difference.
 
 
-
 ### SIGNIFICANCE LEVEL
 We chose a significance level (alpha) of 0.05. 
-
+### Obserevd Statistic
+6034.653
 
 ### P-VALUE
-0.473
+0.3159
 Based on our p-value, if the p-value is less than the significance level (0.05), we reject the null hypothesis. This means there is significant evidence to suggest that the average number of customers affected by outages is different between regions with normal and warm climates. Otherwise, we fail to reject the null hypothesis, indicating that any observed difference could be due to random chance.
 
 
@@ -153,7 +159,9 @@ Reason for Choice: MAE is chosen because it provides a straightforward measure o
 
 
 ## BASELINE MODEL
+### Model: RandomForestRegressor
 
+Algorithm: RandomForestRegressor with 100 estimators and a random state set to 0 for reproducibility.
 
 ### FEATUES ADDED :
 
@@ -171,10 +179,52 @@ Categorical Features (Nominal): CLIMATE.REGION and CAUSE.CATEGORY were encoded u
 Numerical Features (Quantitative): MONTH was passed through without any transformation since it is already numerical.
 
 
-The Mean Absolute Error on the test set was 107960.
+The Mean Absolute Error on the test set was 145663.421.
 
 
-Looking at the evaluation of the model 
+### MODEL EVALUATION:
+The feature set is really low and may not accurately represent all the elements that actually effect the CUSTOMERS.AFFECTED column. Overall, while the baseline model gave us an idea as to how all the features had an effect on the customers affected and a reasonable MAE, it needs to be made better, such as adding more relevant features and performing hyperparameter tuning and that could potentially made possible improve its performance. The inclusion of additional features related to outage conditions, infrastructure, and demographics could provide a more comprehensive understanding of the factors affecting customer outages.
 
+## FINAL MODEL
 
-FINAL MODEL
+### FEATURES ADDED :
+ANOMALY.LEVEL: This feature measures the level of abnormal conditions (e.g., extreme temperatures or unusual weather patterns). Higher anomaly levels may correlate with more significant outages due to extreme weather events.
+
+TOTAL.CUSTOMERS: This feature represents the total number of customers served in the area affected by the outage. More populated areas may have more complex infrastructure, leading to larger outages when problems occur. So we thought this would have show correlation to the customers affected itself. For example, an outage in a densely populated urban area will likely impact more customers than one in a sparsely populated rural area, even if the outage duration and cause are similar.
+
+POSTAL.CODE: This feature captures the specific area affected by the outage. Including this feature allows the model to account for localized factors that may influence outage severity, such as local infrastructure quality or specific environmental conditions.
+
+OUTAGE.DURATION: This feature measures the duration of the outage. Longer outages likely affect more customers, making it a crucial predictor for the number of customers affected.
+
+### Hyperparameter Tuning Method:
+The hyperparameters were selected using GridSearchCV, which performs an exhaustive search over specified parameter values. The model was evaluated using 5-fold cross-validation with the scoring metric set to negative mean absolute error (neg_mean_absolute_error).
+
+### Mean Absolute error:
+87811.706
+### Best Parametres - 
+max_depth - 20, min_samples_split - 10, n_estimators - 300
+### Improvement from Baseline to Final
+
+## FAIRNESS ANALYSIS
+
+### Choice of Groups
+Group X: Customers in areas with the climate category "normal"
+Group Y: Customers in areas with the climate category "warm"
+### Evaluation Metric
+Mean Absolute Error (MAE): This metric measures the average magnitude of the errors in predictions, without considering their direction. It is a common evaluation metric for regression models as it provides a clear interpretation of prediction accuracy.
+
+### Hypotheses
+Null Hypothesis (H0): The model's prediction errors (MAE) for Group X (normal climate) and Group Y (warm climate) are the same. In other words, any observed difference in MAE is due to random chance.
+
+Alternative Hypothesis (H1): The model's prediction errors (MAE) for Group X and Group Y are different. In other words, the observed difference in MAE is statistically significant, indicating potential unfairness.
+
+### Test Statistic
+The difference in MAE between the two groups (Group X and Group Y). That is difference of MAE between customers in areas with climate category as 'normal' and 'warm'. 
+Observed MAE Difference - -713.862
+### Significance Value 
+Alpha : 0.05
+
+### P-value
+0.5539
+### Conclusion
+P-value is greater than or equal to the significance level, we fail to reject the null hypothesis, concluding that the model is fair. This means that there is insufficient evidence to conclude that the model's prediction errors (MAE) for Group X (normal climate) and Group Y (warm climate) are statistically significantly different. This implies that the model does not systematically favor or disadvantage either group based on the climate category. 
