@@ -40,7 +40,7 @@ After this imputation, we realized the CLIMATE.CATEGORY column had 9 NaN values.
 We saw the distribution of the CLIMATE.CATEGORY column of our data frame and how many of each category we have. 
 
 <iframe
-  src="assets/fig7.html"
+  src="assets/fig50.html"
   width="800"
   height="600"
   frameborder="0"
