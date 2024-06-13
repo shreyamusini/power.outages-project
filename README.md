@@ -1,18 +1,18 @@
-# H1 Data Analysis for Power Outages Project
+# Data Analysis for Power Outages
 
 
 
-## H2 REPORT
+## REPORT
 We chose the power outages dataset because we thought it gives us real time exposure to different types of data analysis like time series, handling different Null values and wrongly represented data. We thought this analyis was important because we did find very interesting differneces amongst various climate regions at different times of the year which we further analyzed. We mostly focused mostly on weather and climate regions on power outages especially customers affected by the power outages. Our Dataset has 1534 columns and 55 columns where each row resembled each power outage. The columns we used up the most were CUSTOMERS.AFFECTED, CLIMATE.REGION, ANOMALY.LEVEL, MONTH, YEAR, CAUSE.CATEGORY, CAUSE.CATERGORY.DETAIL, TOTAL.CUSTOMERS and some more columns. We thought columns measuring customers affected was a good metric to quantify the effect each power outage and has and how it varies with across other featues in the dataset. 
 
 
 
-## H2 DATA CLEANING AND EXPLORATORY DATA ANALYSIS
+## DATA CLEANING AND EXPLORATORY DATA ANALYSIS
 
 We did a bunch of cleaning for the outage start data, outage start time, outage restoration data and time columns so we have all the information situated in 1 column for both start and restoration. We did so by changing it to datetime first and then to timedelta and then adding both the start data and time to have them in the same column. As well, we filled in the 9 NAN values in the OUTAGE.START and OUTAGE.RESTORATION columns in two different ways: filling in the NANs with the average duration of power outages + their start timestamp in OUTAGE.START and filling in OUTAGE.START and OUTAGE.RESTORATION by imputing the mean start and end times per region, which is the CLIMATE.REGION column. There were a total of 4 NANs in the CLIMATE.REGION column for the states Hawaii and Alaska. For these values, we manually filled Hawaii with a postal code of HI and Alaska with AK. We imputated the null values in the CUSTOMERS.AFFECTED column by imputing with their average customers affected by the state the power outage took place. We filled the null values in ANOMALY.LEVEL using probabilistic imputation conditioned on the MONTH and YEAR columns of our dataframe. There were still 9 null values in the dataframe because the anomaly levels of those month and year were filled with NaN. Since the anomaly levels were values from known values of the oceanic El Niño/La Niña index referring to the cold and warm episodes by season that were also averaged over periods of 3 months, we took the values that attributed to the month and year the remaining null values and probabilistically imputed the anomaly levels manually. After this imputation, we realized the CLIMATE.CATEGORY column had 9 NaN values. Since the oceanic index table also color coded the values for each group of 3 months as warm, cold, or normal (which are the values used in CLIMATE.CATEGORY which is pulled from the same table as anomaly values) we manually filled in the climate categories using month and year to get the category. The last data cleaning step we performed was removing Alaska's power outage from the dataframe because there was only 1 reported outage where most of the values were NaN and nothing to reference to perform imputations. 
 
 
-### H3 HEAD OF CLEANED DATAFRAME
+### HEAD OF CLEANED DATAFRAME
 
 |   YEAR |   MONTH | U.S._STATE   | POSTAL.CODE   | NERC.REGION   | CLIMATE.REGION     |   ANOMALY.LEVEL | CLIMATE.CATEGORY   | CAUSE.CATEGORY     | CAUSE.CATEGORY.DETAIL   |   HURRICANE.NAMES |   OUTAGE.DURATION |   DEMAND.LOSS.MW |   CUSTOMERS.AFFECTED |   RES.PRICE |   COM.PRICE |   IND.PRICE |   TOTAL.PRICE |   RES.SALES |   COM.SALES |   IND.SALES |   TOTAL.SALES |   RES.PERCEN |   COM.PERCEN |   IND.PERCEN |   RES.CUSTOMERS |   COM.CUSTOMERS |   IND.CUSTOMERS |   TOTAL.CUSTOMERS |   RES.CUST.PCT |   COM.CUST.PCT |   IND.CUST.PCT |   PC.REALGSP.STATE |   PC.REALGSP.USA |   PC.REALGSP.REL |   PC.REALGSP.CHANGE |   UTIL.REALGSP |   TOTAL.REALGSP |   UTIL.CONTRI |   PI.UTIL.OFUSA |   POPULATION |   POPPCT_URBAN |   POPPCT_UC |   POPDEN_URBAN |   POPDEN_UC |   POPDEN_RURAL |   AREAPCT_URBAN |   AREAPCT_UC |   PCT_LAND |   PCT_WATER_TOT |   PCT_WATER_INLAND | OUTAGE.START        | OUTAGE.RESTORATION   |
 |-------:|--------:|:-------------|:--------------|:--------------|:-------------------|----------------:|:-------------------|:-------------------|:------------------------|------------------:|------------------:|-----------------:|---------------------:|------------:|------------:|------------:|--------------:|------------:|------------:|------------:|--------------:|-------------:|-------------:|-------------:|----------------:|----------------:|----------------:|------------------:|---------------:|---------------:|---------------:|-------------------:|-----------------:|-----------------:|--------------------:|---------------:|----------------:|--------------:|----------------:|-------------:|---------------:|------------:|---------------:|------------:|---------------:|----------------:|-------------:|-----------:|----------------:|-------------------:|:--------------------|:---------------------|
@@ -25,26 +25,19 @@ We did a bunch of cleaning for the outage start data, outage start time, outage 
 
 
 
-## H2 UNIVARIATE ANALYSIS
+## UNIVARIATE ANALYSIS
 We saw the distribution of the CLIMATE.CATEGORY column of our data frame and how many of each category we have. We found that there were more of normal and then cold while warm has the least number of values. We also made a bar plot for each climate.region and found the below:
 
 As obvious, there were most of northeast climate region and least of Alaska. 
 
 
 
-## H2 BIVARIATE ANALYSIS
+## BIVARIATE ANALYSIS
 For bivariate analysis we made a histogram looking at the distribution of cause catogory across each climate region and found that severe weather was the most likely cause affecting a power outage.
 
 We 
 
-<iframe
-  src="assets/fig.html"
-  width="800"
-  height="600"
-  frameborder="0"
-></iframe>
-
-## H2 ASSESMENT OF MISSINGNESS
+## ASSESMENT OF MISSINGNESS
 The pivot table displayed below provides a detailed view of the average number of customers affected by different cause categories across each month. 
 
 
@@ -54,45 +47,67 @@ We do think the column CUSTOMERS AFFECTED is NMAR because we did some analysis a
 
 
 
-## H2 HYPOTHESIS TESTING
+
+
+We investigated the missingness of the values of CAUSE.CATEGORY and CAUSE.CATEGORY.DETAIL because when we examined the missingness of the details, we saw that more values were missing when the cause of the power outage was severe weather. The graph below shows the distribution of the cause being severe weather and the counts of the detail being missing or not missing. 
+
+<iframe
+  src="assets/fig10.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+We performed a permutation test to examine the missingness of cause category and cause category detail. The graph below shows the distribution of the TVDs calculated from our permutation test for determining the missingness of the cause of the power outage vs the details of the cause of the power outage (Cause Category vs Cause Category Detail). From the graph and our permutation test, we received a p-value of 0.0, meaning that the missingness of cause category detail is very dependent on cause category. 
+
+<iframe
+  src="assets/fig.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+
+
+## HYPOTHESIS TESTING
 1. Null Hypothesis: The same amount of customers were affected by power outages in normal and warm climate coniditons
 
 2. Alternative Hypothesis: More customers were affected by power outages due to normal climate conditions than warm climate conditions
 
-### H3 CHOICE of test statistic
+### Choice of Test Statistic
 The test statistic chosen is the difference in mean number of customers affected between regions with a warm climate and those with a normal climate. This is a suitable choice because we are interested in comparing the means of two groups to determine if there is a significant difference.
 
 
 
-### H3 SIGNIFICANCE LEVEL
+### SIGNIFICANCE LEVEL
 We chose a significance level (alpha) of 0.05. 
 
 
-### H3 P-VALUE
+### P-VALUE
 0.473
 Based on our p-value, if the p-value is less than the significance level (0.05), we reject the null hypothesis. This means there is significant evidence to suggest that the average number of customers affected by outages is different between regions with normal and warm climates. Otherwise, we fail to reject the null hypothesis, indicating that any observed difference could be due to random chance.
 
 
 
-## H2 FRAMING A PREDICTION PROBLEM
+## FRAMING A PREDICTION PROBLEM
 Predicting the number of customers affected by power outages due cause categories, specific month, and climate region. 
 
 
-### H3 Type: Regression
+### Type: Regression
 Understanding and predicting the number of customers affected by power outages is crucial for resource allocation, emergency response planning, and minimizing the impact on communities. By accurately predicting this number, utilities and emergency management agencies can better prepare for and mitigate the effects of severe weather events.
 
 
-### H3 Evaluation Metric
+### Evaluation Metric
 
 Mean Absolute Error (MAE)
 
 Reason for Choice: MAE is chosen because it provides a straightforward measure of prediction error by averaging the absolute differences between the predicted and actual values. It is less sensitive to outliers compared to metrics like Mean Squared Error (MSE) and provides a clear interpretation of the average error magnitude. This is important for practical applications where understanding the typical deviation from actual values is critical for planning and decision-making.
 
 
-## H2 BASELINE MODEL
+## BASELINE MODEL
 
 
-### H3 FEATUES ADDED :
+### FEATUES ADDED :
 
 CLIMATE.REGION: This feature represents the climate region where the outage occurred. Different climate regions may have varying levels of exposure to weather conditions that can affect power outages. For example, regions prone to hurricanes or snowstorms might experience more severe outages affecting more customers. Catergorical feature as it is a nominal feature
 
