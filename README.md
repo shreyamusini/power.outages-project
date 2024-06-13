@@ -2,7 +2,7 @@
 
 
 ## REPORT
-Power Outages dataset provides a comprehensive view of various aspects of power outages, allowing for detailed data analysis including time series analysis, handling missing values, and correcting data inconsistencies. This analyis was important because there were a lot of trends across various power outages amongst various climate regions at different times of the year which can have significant implications for infrastructure planning and disaster preparedness. Weather and Climate regions were mostly focused on in this dataset especially customers impacted by these power outages. Power outages are a common and often disruptive event that can have significant economic and social impacts. By analyzing how weather conditions and climate regions affect power outages, we can provide valuable insights that help in planning and resource allocation to reduce the adverse effects on customers. Our Dataset has 1534 columns and 55 columns where each row resembled each power outage. 
+Power Outages dataset provides a comprehensive view of various aspects of power outages, allowing for detailed data analysis including time series analysis, handling missing values, and correcting data inconsistencies. This analyis was important because there were a lot of trends across various power outages amongst various climate regions at different times of the year which can have significant implications for infrastructure planning and disaster preparedness. Weather and Climate regions were mostly focused on in this dataset especially customers impacted by these power outages. Power outages are a common and often disruptive event that can have significant economic and social impacts. By analyzing how weather conditions and climate regions affect power outages, we can provide valuable insights that help in planning and resource allocation to reduce the adverse effects on customers. Our Dataset has 1534 columns and 55 columns where each row resembled a power outage. 
 ### Relevant Columns:
 CUSTOMERS.AFFECTED: The number of customers impacted by each power outage. This is a key metric for quantifying the impact of power outages.
 CLIMATE.REGION: The climate region where the outage occurred. Different regions may have varying levels of exposure to weather conditions that affect power outages.
@@ -49,7 +49,7 @@ After this imputation, we realized the CLIMATE.CATEGORY column had 9 NaN values.
 
 
 ## UNIVARIATE ANALYSIS
-We saw the distribution of the CLIMATE.CATEGORY column of our data frame and how many of each category we have. 
+We created a distribution of the CLIMATE.CATEGORY column of our data frame and how many of each category we have. 
 
 <iframe
   src="assets/fig7.html"
@@ -74,7 +74,7 @@ Delaware, New York, Vermont, Connecticut, Massachusetts, Maine and New Hampshire
 
 
 ## BIVARIATE ANALYSIS
-For bivariate analysis we made a histogram looking at the distribution of cause catogory across each climate region and found that severe weather was the most likely cause affecting a power outage.
+For bivariate analysis, we made a histogram looking at the distribution of cause catogory across each climate region. The plot is found below. From this graph, it was found that severe weather was the most likely cause of a power outage. 
 
 <iframe
   src="assets/fig1.html"
@@ -103,12 +103,9 @@ We thought it was imporant to make this pivot table because by analyzing the ave
 
 
 ## ASSESMENT OF MISSINGNESS
-We do think the column CUSTOMERS AFFECTED is NMAR because we did some analysis and found out that customers affected was most missing for cause category of intentional attack and we thought that could be so, 
+The CUSTOMERS.AFFECTED column is NMAR because after performing some analysis to see the total customers affected by cause category, intentional attack had the most customers affected. This might reflect the notion that the focus would be on fixing the power outages in cases of intentional attack, causing the number of affected customers to be determined later. 
 
-We investigate the missingness of anomaly level values and climate region and we achieved a conclusion that the column of anomaly levels does not seem to be very dependent on climate region. With further analysis above during EDA while imputing for anomaly values, we found that missing values of NA were not very dependent on other columns missingness so we manually imputed for the anomaly values by looking at respective Year, Month and if the climate category of the reigon was warm, cold or normal
-
-
-We investigated the missingness of the values of CAUSE.CATEGORY and CAUSE.CATEGORY.DETAIL because when we examined the missingness of the details, we saw that more values were missing when the cause of the power outage was severe weather. The graph below shows the distribution of the cause being severe weather and the counts of the detail being missing or not missing. 
+We investigated the missingness of the values of CAUSE.CATEGORY and CAUSE.CATEGORY.DETAIL because when we examined the missingness of the details, we saw that a higher proportion of detail values were missing when the cause of the power outage was severe weather. The graph below shows the distribution of the cause being severe weather and the counts of the detail being missing or not missing. 
 
 <iframe
   src="assets/fig9.html"
@@ -126,7 +123,9 @@ We performed a permutation test to examine the missingness of cause category and
   frameborder="0"
 ></iframe>
 
-We performed a permutation test to examine the missingness of ANOMALY.LEVEL and CLIMATE.REGION. The graph below shows the distribution of the TVDs calculated from our permutation test for determining the missingness of the anomaly level of that respecttive power outage vs the climate region in which the outage occured (ANOMALY.LEVEL vs CLIMATE.REGION). From the graph and our permutation test, we received a p-value of 0.632, meaning that the missingness of climate region is not very dependent on anomaly level.
+
+As well, we investigated the missingness of the values of ANOMALY.LEVEL and CLIMATE.REGION because when we examined the missingness of the details, we saw that an approxiamately equal proportions of missing anomaly levels and not missing values between the South climate region and other regions. The graph below shows the distribution of the climate region being South and the proportion of the anomaly being missing or not missing. 
+
 
 <iframe
   src="assets/fig20.html"
@@ -134,6 +133,9 @@ We performed a permutation test to examine the missingness of ANOMALY.LEVEL and 
   height="600"
   frameborder="0"
 ></iframe>
+
+
+We performed a permutation test to examine the missingness of ANOMALY.LEVEL and CLIMATE.REGION. The graph below shows the distribution of the TVDs calculated from our permutation test for determining the missingness of the anomaly level of that respecttive power outage vs the climate region in which the outage occured (ANOMALY.LEVEL vs CLIMATE.REGION). From the graph and our permutation test, we received a p-value of 0.599, meaning that the missingness of climate region is not very dependent on anomaly level.
 
 
 <iframe
@@ -160,13 +162,14 @@ We chose a significance level (alpha) of 0.05.
 
 ### P-VALUE
 0.3159
-Based on our p-value, if the p-value is less than the significance level (0.05), we reject the null hypothesis. This means there is significant evidence to suggest that the average number of customers affected by outages is different between regions with normal and warm climates. Otherwise, we fail to reject the null hypothesis, indicating that any observed difference could be due to random chance.
+Based on our p-value, if the p-value is less than the significance level (0.05), we reject the null hypothesis. This means there is significant evidence to suggest that the average number of customers affected by outages is different between regions with normal and warm climates. Otherwise, we fail to reject the null hypothesis, indicating that any observed difference could be due to random chance. This dataset could have more reported normal climate outages that outweigh the actual count of normal climate outages in the population, making our hypothesis test more likely to be favoring the null than the alternative.
 
 
 
 ## FRAMING A PREDICTION PROBLEM
 Predicting the number of customers affected by power outages due cause categories, specific month, and climate region. 
 
+We chose to predict the number of customers affected by power outages to represent the impact of power outages and their causes. As well, by understanding how many people will be affected by what severity and types of outages, it might help for mitigation and preparedness in the future. 
 
 ### Type: Regression
 Understanding and predicting the number of customers affected by power outages is crucial for resource allocation, emergency response planning, and minimizing the impact on communities. By accurately predicting this number, utilities and emergency management agencies can better prepare for and mitigate the effects of severe weather events.
@@ -176,7 +179,7 @@ Understanding and predicting the number of customers affected by power outages i
 
 Mean Absolute Error (MAE)
 
-Reason for Choice: MAE is chosen because it provides a straightforward measure of prediction error by averaging the absolute differences between the predicted and actual values. It is less sensitive to outliers compared to metrics like Mean Squared Error (MSE) and provides a clear interpretation of the average error magnitude. This is important for practical applications where understanding the typical deviation from actual values is critical for planning and decision-making.
+Reason for Choice: MAE is chosen because it provides a straightforward measure of prediction error by averaging the absolute differences between the predicted and actual values. It is less sensitive to outliers compared to metrics like Mean Squared Error (MSE) and provides a clear interpretation of the average error magnitude. This is important for practical applications where understanding the typical deviation from actual values is critical for planning and decision-making. Since the prediction is for customers predicted, having a metric to show if it is predicting correctly is the goal of our prediction problem.
 
 
 ## BASELINE MODEL
@@ -246,7 +249,7 @@ Group Y: Customers in areas with the climate category "warm"
 
 ### Test Statistic
 The difference in MAE between the two groups (Group X and Group Y). That is difference of MAE between customers in areas with climate category as 'normal' and 'warm'. 
-Observed MAE Difference - -713.862
+Observed MAE Difference: -713.862
 ### Significance Value 
 Alpha : 0.05
 
