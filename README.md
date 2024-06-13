@@ -61,7 +61,7 @@ We investigated the missingness of the values of CAUSE.CATEGORY and CAUSE.CATEGO
 We performed a permutation test to examine the missingness of cause category and cause category detail. The graph below shows the distribution of the TVDs calculated from our permutation test for determining the missingness of the cause of the power outage vs the details of the cause of the power outage (Cause Category vs Cause Category Detail). From the graph and our permutation test, we received a p-value of 0.0, meaning that the missingness of cause category detail is very dependent on cause category. 
 
 <iframe
-  src="assets/fig.html"
+  src="assets/fig26.html"
   width="800"
   height="600"
   frameborder="0"
