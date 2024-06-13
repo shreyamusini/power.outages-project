@@ -9,7 +9,18 @@ We chose the power outages dataset because we thought it gives us real time expo
 
 ## DATA CLEANING AND EXPLORATORY DATA ANALYSIS
 
-We did a bunch of cleaning for the outage start data, outage start time, outage restoration data and time columns so we have all the information situated in 1 column for both start and restoration. We did so by changing it to datetime first and then to timedelta and then adding both the start data and time to have them in the same column. As well, we filled in the 9 NAN values in the OUTAGE.START and OUTAGE.RESTORATION columns in two different ways: filling in the NANs with the average duration of power outages + their start timestamp in OUTAGE.START and filling in OUTAGE.START and OUTAGE.RESTORATION by imputing the mean start and end times per region, which is the CLIMATE.REGION column. There were a total of 4 NANs in the CLIMATE.REGION column for the states Hawaii and Alaska. For these values, we manually filled Hawaii with a postal code of HI and Alaska with AK. We imputated the null values in the CUSTOMERS.AFFECTED column by imputing with their average customers affected by the state the power outage took place. We filled the null values in ANOMALY.LEVEL using probabilistic imputation conditioned on the MONTH and YEAR columns of our dataframe. There were still 9 null values in the dataframe because the anomaly levels of those month and year were filled with NaN. Since the anomaly levels were values from known values of the oceanic El Niño/La Niña index referring to the cold and warm episodes by season that were also averaged over periods of 3 months, we took the values that attributed to the month and year the remaining null values and probabilistically imputed the anomaly levels manually. After this imputation, we realized the CLIMATE.CATEGORY column had 9 NaN values. Since the oceanic index table also color coded the values for each group of 3 months as warm, cold, or normal (which are the values used in CLIMATE.CATEGORY which is pulled from the same table as anomaly values) we manually filled in the climate categories using month and year to get the category. The last data cleaning step we performed was removing Alaska's power outage from the dataframe because there was only 1 reported outage where most of the values were NaN and nothing to reference to perform imputations. 
+We perfomed data cleaning on OUTAGE.START.TIME, OUTAGE.START.DATE, OUTAGE.RESTORATION.TIME, OUTAGE.RESTORATION.DATE, CLIMATE.REGION, CUSTOMERS.AFFECTED, ANOMALY.LEVELS, and CLIMATE.CATEGORY. Each cleaning method is described below:
+
+### OUTAGE.START columns and OUTAGE.RESTORATION columns
+We did a bunch of cleaning for the outage start data, outage start time, outage restoration data and time columns so we have all the information situated in 1 column for both start and restoration. We did so by changing it to datetime first and then to timedelta and then adding both the start data and time to have them in the same column. As well, we filled in the 9 NAN values in the OUTAGE.START and OUTAGE.RESTORATION columns in two different ways: filling in the NANs with the average duration of power outages + their start timestamp in OUTAGE.START and filling in OUTAGE.START and OUTAGE.RESTORATION by imputing the mean start and end times per region, which is the CLIMATE.REGION column. 
+
+### CLIMATE.REGION and CUSTOMERS.AFFECTED
+There were a total of 4 NANs in the CLIMATE.REGION column for the states Hawaii and Alaska. For these values, we manually filled Hawaii with a postal code of HI and Alaska with AK. We imputated the null values in the CUSTOMERS.AFFECTED column by imputing with their average customers affected by the state the power outage took place. 
+
+### ANOMALY.LEVELS and CLIMATE.CATEGORY
+We filled the null values in ANOMALY.LEVEL using probabilistic imputation conditioned on the MONTH and YEAR columns of our dataframe. There were still 9 null values in the dataframe because the anomaly levels of those month and year were filled with NaN. Since the anomaly levels were values from known values of the oceanic El Niño/La Niña index referring to the cold and warm episodes by season that were also averaged over periods of 3 months, we took the values that attributed to the month and year the remaining null values and probabilistically imputed the anomaly levels manually. 
+
+After this imputation, we realized the CLIMATE.CATEGORY column had 9 NaN values. Since the oceanic index table also color coded the values for each group of 3 months as warm, cold, or normal (which are the values used in CLIMATE.CATEGORY which is pulled from the same table as anomaly values) we manually filled in the climate categories using month and year to get the category. The last data cleaning step we performed was removing Alaska's power outage from the dataframe because there was only 1 reported outage where most of the values were NaN and nothing to reference to perform imputations. 
 
 
 ### HEAD OF CLEANED DATAFRAME
@@ -26,23 +37,60 @@ We did a bunch of cleaning for the outage start data, outage start time, outage 
 
 
 ## UNIVARIATE ANALYSIS
-We saw the distribution of the CLIMATE.CATEGORY column of our data frame and how many of each category we have. We found that there were more of normal and then cold while warm has the least number of values. We also made a bar plot for each climate.region and found the below:
+We saw the distribution of the CLIMATE.CATEGORY column of our data frame and how many of each category we have. 
 
-As obvious, there were most of northeast climate region and least of Alaska. 
+<iframe
+  src="assets/fig7.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
 
+In the above bar plot, most of the power outages reported in the dataframe occured in normal climate, with a total reported of 744 counts of outages in normal climate, whereas 473 cases happened in cold climate and 308 happened in hot climate. This trend of having more outages in a normal climate category shows how weather might not be a leading cause in causing power outages and there may be other factors that impact the occurrence of a power outage. 
+
+As well, we plotted the distribution of CLIMATE.REGIONS in our data frame to see how many power outages were reported to occur in each region. The distribution is plotted below:
+
+<iframe
+  src="assets/fig5.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+In the above plot, most of the power outages seem to occur in the Northeast climate region, which includes Maryland, Pennsylvania, New Jersey, District of Columbia,
+Delaware, New York, Vermont, Connecticut, Massachusetts, Maine and New Hampshire. More outages could be reported in this region because the states are densly populated or because more relevant outages were recorded in these states in comparison to others. As well, there could be other factors within this climate regions that make it more prone to power outages than other regions.
 
 
 ## BIVARIATE ANALYSIS
 For bivariate analysis we made a histogram looking at the distribution of cause catogory across each climate region and found that severe weather was the most likely cause affecting a power outage.
 
-We 
+<iframe
+  src="assets/fig1.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+
+## INTERESTING AGGREGATES
+
+| CAUSE.CATEGORY                |      1.0 |      2.0 |      3.0 |      4.0 |      5.0 |      6.0 |      7.0 |      8.0 |      9.0 |     10.0 |     11.0 |      12.0 |
+|:------------------------------|---------:|---------:|---------:|---------:|---------:|---------:|---------:|---------:|---------:|---------:|---------:|----------:|
+| equipment failure             |  77455.2 | 259779   | 108138   |  92702.7 | 159632   |  82336.8 |  69725.5 | 182649   | 294398   |    nan   |  83399.7 | 130684    |
+| fuel supply emergency         | 128283   | 131868   | 105834   | 156825   | 196021   | 153510   | 150654   | 155919   | 165116   |    nan   | 194949   | 159285    |
+| intentional attack            |  55724.6 |  57833.8 |  78141.8 |  35017.9 |  33483.4 |  49386.3 |  43819.8 |  52123.6 |  36363.6 |  26950.6 |  17482.3 |  53145.1  |
+| islanding                     |    nan   |  11465.5 |  82893.9 |      0.5 |  70152.4 |  27946   |  25624.5 |  27314.8 |  11533.3 |   1714   |  18493.7 |   4783.33 |
+| public appeal                 | 102859   | 182306   | 175397   |    nan   |  80546.3 |  90043.7 | 133452   | 113218   | 149429   | 212299   |    nan   | 117933    |
+| severe weather                | 228473   | 164264   | 125699   | 141429   | 167916   | 162943   | 136524   | 191218   | 300866   | 251450   | 134434   | 194949    |
+| system operability disruption | 106823   | 191257   | 178195   | 130680   | 267161   |  78130.3 |  87644.9 | 637573   | 193158   | 135028   | 182500   |  99959.7  |
+
+
+The pivot table displayed above provides a detailed view of the average number of customers affected by different cause categories across each month.
+We thought it was imporant to make this pivot table because by analyzing the average number of affected customers per cause category, stakeholders can identify patterns and trends over time. For example, certain months might consistently show higher averages for specific causes, indicating a seasonal trend. This did help us which months had what cause affect the customers the most. As well, it gives us more insight on what types of power outages affect more customers. For example. the highest value in this pivot table is 99959.7, showing that the highest average number of customers that were affected was due to system operability disruptions that occured in the month of December. These month distributions can also shed some insight on which power outages seem to happen more frequently than others in a certain time of the year. 
+
+
 
 ## ASSESMENT OF MISSINGNESS
-The pivot table displayed below provides a detailed view of the average number of customers affected by different cause categories across each month. 
-
-
-We thought it was imporant to make this pivot table because by analyzing the average number of affected customers per cause category, stakeholders can identify patterns and trends over time. For example, certain months might consistently show higher averages for specific causes, indicating a seasonal trend. This did help us which months had what cause affect the customers the most. 
-
 We do think the column CUSTOMERS AFFECTED is NMAR because we did some analysis and found out that customers affected was most missing for cause category of intentional attack and we thought that could be so, 
 
 
