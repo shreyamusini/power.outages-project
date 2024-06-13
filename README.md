@@ -1,4 +1,6 @@
-# Data Analysis for Power Outages
+# Data Analysis for Power Outages 
+
+Vinuthna Hasthi and Shreya Musini
 
 
 ## REPORT
