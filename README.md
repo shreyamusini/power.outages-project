@@ -6,11 +6,17 @@ Power Outages dataset because we thought it provides a comprehensive view of var
 ### Relevant Columns:
 CUSTOMERS.AFFECTED: The number of customers impacted by each power outage. This is a key metric for quantifying the impact of power outages.
 CLIMATE.REGION: The climate region where the outage occurred. Different regions may have varying levels of exposure to weather conditions that affect power outages.
+
 ANOMALY.LEVEL: The level of anomaly in weather conditions, indicating unusual weather patterns that might contribute to power outages.
+
 MONTH: The month in which the outage occurred. This helps in analyzing seasonal patterns in power outages.
+
 YEAR: The year in which the outage occurred, useful for identifying trends over time.
+
 CAUSE.CATEGORY: The general category of the cause of the outage, such as weather, equipment failure, or human error.
+
 CAUSE.CATEGORY.DETAIL: More specific details about the cause of the outage within the general category.
+
 TOTAL.CUSTOMERS: The total number of customers served by the utility company in the affected area. This helps in understanding the scale of the outage in relation to the customer base.
 
 
@@ -99,8 +105,7 @@ We thought it was imporant to make this pivot table because by analyzing the ave
 ## ASSESMENT OF MISSINGNESS
 We do think the column CUSTOMERS AFFECTED is NMAR because we did some analysis and found out that customers affected was most missing for cause category of intentional attack and we thought that could be so, 
 
-We investigate the missingness of anomaly level values and climate region and we achieved a p-value of 
-
+We investigate the missingness of anomaly level values and climate region and we achieved a conclusion that the column of anomaly levels does not seem to be very dependent on climate region. With further analysis above during EDA while imputing for anomaly values, we found that missing values of NA were not very dependent on other columns missingness so we manually imputed for the anomaly values by looking at respective Year, Month and if the climate category of the reigon was warm, cold or normal
 
 
 We investigated the missingness of the values of CAUSE.CATEGORY and CAUSE.CATEGORY.DETAIL because when we examined the missingness of the details, we saw that more values were missing when the cause of the power outage was severe weather. The graph below shows the distribution of the cause being severe weather and the counts of the detail being missing or not missing. 
@@ -121,7 +126,7 @@ We performed a permutation test to examine the missingness of cause category and
   frameborder="0"
 ></iframe>
 
-We performed a permutation test to examine the missingness of ANOMALY.LEVEL and CLIMATE.REGION. The graph below shows the distribution of the TVDs calculated from our permutation test for determining the missingness of the anomaly level of that respecttive power outage vs the climate region in which the outage occured (ANOMALY.LEVEL vs CLIMATE.REGION). From the graph and our permutation test, we received a p-value of 0.0, meaning that the missingness of climate region is not very dependent on anomaly level.
+We performed a permutation test to examine the missingness of ANOMALY.LEVEL and CLIMATE.REGION. The graph below shows the distribution of the TVDs calculated from our permutation test for determining the missingness of the anomaly level of that respecttive power outage vs the climate region in which the outage occured (ANOMALY.LEVEL vs CLIMATE.REGION). From the graph and our permutation test, we received a p-value of 0.632, meaning that the missingness of climate region is not very dependent on anomaly level.
 
 ## HYPOTHESIS TESTING
 1. Null Hypothesis: The same amount of customers were affected by power outages in normal and warm climate coniditons
@@ -188,22 +193,27 @@ The feature set is really low and may not accurately represent all the elements 
 ## FINAL MODEL
 
 ### FEATURES ADDED :
-ANOMALY.LEVEL: This feature measures the level of abnormal conditions (e.g., extreme temperatures or unusual weather patterns). Higher anomaly levels may correlate with more significant outages due to extreme weather events.
+**ANOMALY.LEVEL**: This feature measures the level of abnormal conditions (e.g., extreme temperatures or unusual weather patterns). Higher anomaly levels may correlate with more significant outages due to extreme weather events.
 
-TOTAL.CUSTOMERS: This feature represents the total number of customers served in the area affected by the outage. More populated areas may have more complex infrastructure, leading to larger outages when problems occur. So we thought this would have show correlation to the customers affected itself. For example, an outage in a densely populated urban area will likely impact more customers than one in a sparsely populated rural area, even if the outage duration and cause are similar.
+**TOTAL.CUSTOMERS**: This feature represents the total number of customers served in the area affected by the outage. More populated areas may have more complex infrastructure, leading to larger outages when problems occur. So we thought this would have show correlation to the customers affected itself. For example, an outage in a densely populated urban area will likely impact more customers than one in a sparsely populated rural area, even if the outage duration and cause are similar.
 
 POSTAL.CODE: This feature captures the specific area affected by the outage. Including this feature allows the model to account for localized factors that may influence outage severity, such as local infrastructure quality or specific environmental conditions.
 
-OUTAGE.DURATION: This feature measures the duration of the outage. Longer outages likely affect more customers, making it a crucial predictor for the number of customers affected.
+**OUTAGE.DURATION**: This feature measures the duration of the outage. Longer outages likely affect more customers, making it a crucial predictor for the number of customers affected.
 
 ### Hyperparameter Tuning Method:
 The hyperparameters were selected using GridSearchCV, which performs an exhaustive search over specified parameter values. The model was evaluated using 5-fold cross-validation with the scoring metric set to negative mean absolute error (neg_mean_absolute_error).
 
 ### Mean Absolute error:
 87811.706
-### Best Parametres - 
-max_depth - 20, min_samples_split - 10, n_estimators - 300
+### Best Parametres:
+**max_depth** - 20
+**min_samples_split** - 10
+**n_estimators** - 300
 ### Improvement from Baseline to Final
+**Inclusion of Relevant columns**:The final model includes additional features that capture important aspects of the data generating process, such as geographical, seasonal, and cause-related factors. These features provide more context and help the model better understand the factors influencing the number of customers affected by outages. By using GridSearchCV, the final model is fine-tuned to select the best combination of hyperparameters, enhancing its predictive performance.
+**Advanced Hyperparameter Tuning**: By using GridSearchCV, the final model is fine-tuned to select the best combination of hyperparameters, enhancing its predictive performance.
+**Comprehensive Preprocessing**: The final model uses a more comprehensive preprocessing pipeline that includes both numerical scaling and categorical encoding, ensuring that the data is appropriately transformed for optimal model performance.
 
 ## FAIRNESS ANALYSIS
 
@@ -211,12 +221,12 @@ max_depth - 20, min_samples_split - 10, n_estimators - 300
 Group X: Customers in areas with the climate category "normal"
 Group Y: Customers in areas with the climate category "warm"
 ### Evaluation Metric
-Mean Absolute Error (MAE): This metric measures the average magnitude of the errors in predictions, without considering their direction. It is a common evaluation metric for regression models as it provides a clear interpretation of prediction accuracy.
+**Mean Absolute Error (MAE)**: This metric measures the average magnitude of the errors in predictions, without considering their direction. It is a common evaluation metric for regression models as it provides a clear interpretation of prediction accuracy.
 
 ### Hypotheses
-Null Hypothesis (H0): The model's prediction errors (MAE) for Group X (normal climate) and Group Y (warm climate) are the same. In other words, any observed difference in MAE is due to random chance.
+**Null Hypothesis (H0)**: The model's prediction errors (MAE) for Group X (normal climate) and Group Y (warm climate) are the same. In other words, any observed difference in MAE is due to random chance.
 
-Alternative Hypothesis (H1): The model's prediction errors (MAE) for Group X and Group Y are different. In other words, the observed difference in MAE is statistically significant, indicating potential unfairness.
+**Alternative Hypothesis (H1)**: The model's prediction errors (MAE) for Group X and Group Y are different. In other words, the observed difference in MAE is statistically significant, indicating potential unfairness.
 
 ### Test Statistic
 The difference in MAE between the two groups (Group X and Group Y). That is difference of MAE between customers in areas with climate category as 'normal' and 'warm'. 
